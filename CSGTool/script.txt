@@ -1,0 +1,3 @@
+LOAD cube
+COPY output\cube cube
+WRITE output\cube

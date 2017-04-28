@@ -28,7 +28,7 @@ public class ObjImporter
     }
 
     // Use this for initialization
-    public Mesh ImportFile(string filePath)
+    public Mesh ImportFile(string filePath)//Edited by Joseph
     {
         meshStruct newMesh = createMeshStruct(filePath);
         populateMeshStruct(ref newMesh);
@@ -36,6 +36,7 @@ public class ObjImporter
         Vector3[] newVerts = new Vector3[newMesh.faceData.Length];
         Vector2[] newUVs = new Vector2[newMesh.faceData.Length];
         Vector3[] newNormals = new Vector3[newMesh.faceData.Length];
+        int[] newTriangles = new int[newMesh.faceData.Length];
         int i = 0;
         /* The following foreach loops through the facedata and assigns the appropriate vertex, uv, or normal
          * for the appropriate Unity mesh array.
@@ -48,18 +49,25 @@ public class ObjImporter
 
             if (v.z >= 1)
                 newNormals[i] = newMesh.normals[(int)v.z - 1];
+
+            newTriangles[i] = (int)v.x-1;
             i++;
         }
 
         Mesh mesh = new Mesh();
 
-        mesh.vertices = newVerts;
-        mesh.uv = newUVs;
-        mesh.normals = newNormals;
-        mesh.triangles = newMesh.triangles;
+        //mesh.vertices = newVerts;
+        //mesh.uv = newUVs;
+        //mesh.normals = newNormals;
+        //mesh.triangles = newMesh.triangles;
+
+        mesh.vertices = newMesh.vertices;
+        mesh.uv = newMesh.uv;
+        mesh.triangles = newTriangles;
+        if (newMesh.normals.Length != mesh.vertices.Length) mesh.RecalculateNormals();
+        else mesh.normals = newMesh.normals;
 
         mesh.RecalculateBounds();
-        ;
 
         return mesh;
     }
